@@ -8,7 +8,7 @@ const PACKAGE_NAME: string = 'cmake';
 
 function getURL(
   version: vi.VersionInfo,
-  arch_candidates: Array<string>
+  arch_candidates: Array<string>,
 ): string {
   const assets_for_platform: vi.AssetInfo[] = version.assets
     .filter((a) => a.platform === process.platform && a.filetype === 'archive')
@@ -27,11 +27,11 @@ function getURL(
   if (matching_assets == undefined) {
     // If there are no x86_64 or x86 packages then give up.
     throw new Error(
-      `Could not find ${process.platform} asset for cmake version ${version.name}`
+      `Could not find ${process.platform} asset for cmake version ${version.name}`,
     );
   }
   core.debug(
-    `Assets matching platform and arch: ${matching_assets.map((a) => a.name)}`
+    `Assets matching platform and arch: ${matching_assets.map((a) => a.name)}`,
   );
   if (matching_assets.length > 1) {
     // If there are multiple assets it is likely to be because there are MacOS
@@ -50,7 +50,7 @@ function getURL(
     // on 10.15 we can safely choose to use the standard package.
     // https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
     const possible_assets = matching_assets.filter(
-      (a) => a.url.match('64') || a.name.match(/macos-universal/)
+      (a) => a.url.match('64') || a.name.match(/macos-universal/),
     );
     if (possible_assets.length > 0) {
       matching_assets = possible_assets;
@@ -59,14 +59,14 @@ function getURL(
       core.warning(
         `Found ${
           matching_assets.length
-        } matching packages: ${matching_assets.map((a) => a.name)}`
+        } matching packages: ${matching_assets.map((a) => a.name)}`,
       );
     }
   }
   const asset_url: string = matching_assets[0].url;
   const num_found: number = matching_assets.length;
   core.debug(
-    `Found ${num_found} assets for ${process.platform} with version ${version.name}`
+    `Found ${num_found} assets for ${process.platform} with version ${version.name}`,
   );
   core.debug(`Using asset url ${asset_url}`);
   return asset_url;
@@ -85,7 +85,7 @@ async function getArchive(url: string): Promise<string> {
 
 export async function addCMakeToToolCache(
   version: vi.VersionInfo,
-  arch_candidates: Array<string>
+  arch_candidates: Array<string>,
 ): Promise<string> {
   const extracted_archive = await getArchive(getURL(version, arch_candidates));
   return await tc.cacheDir(extracted_archive, PACKAGE_NAME, version.name);
@@ -113,7 +113,7 @@ async function getBinDirectoryFrom(tool_path: string): Promise<string> {
 
 export async function addCMakeToPath(
   version: vi.VersionInfo,
-  arch_candidates: Array<string>
+  arch_candidates: Array<string>,
 ): Promise<void> {
   let tool_path: string = tc.find(PACKAGE_NAME, version.name);
   if (!tool_path) {

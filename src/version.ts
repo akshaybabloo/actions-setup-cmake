@@ -98,7 +98,7 @@ function convertToVersionInfo(versions: GitHubVersion[]): vi.VersionInfo[] {
 
 function getHttpOptions(
   api_token: string,
-  page_number: number = 1
+  page_number: number = 1,
 ): rest.IRequestOptions {
   let options: rest.IRequestOptions = {};
   options.additionalHeaders = { Accept: 'application/vnd.github.v3+json' };
@@ -125,7 +125,7 @@ function getNextFromLink(link: string): string | undefined {
 }
 
 export async function getAllVersionInfo(
-  api_token: string = ''
+  api_token: string = '',
 ): Promise<vi.VersionInfo[]> {
   const client = new rest.RestClient(USER_AGENT);
 
@@ -134,7 +134,7 @@ export async function getAllVersionInfo(
   const options = getHttpOptions(api_token);
   const version_response = await client.get<GitHubVersion[]>(
     VERSION_URL,
-    options
+    options,
   );
   if (version_response.statusCode != 200 || !version_response.result) {
     return [];
@@ -168,7 +168,7 @@ export async function getAllVersionInfo(
       const options = getHttpOptions(api_token, cur_page);
       const version_response = await client.get<GitHubVersion[]>(
         VERSION_URL,
-        options
+        options,
       );
       if (!version_response.result || version_response.result.length == 0) {
         break;
@@ -184,14 +184,14 @@ export async function getAllVersionInfo(
 
 function getLatest(version_list: vi.VersionInfo[]): vi.VersionInfo {
   const sorted_versions: vi.VersionInfo[] = version_list.sort((a, b) =>
-    semver.rcompare(a.name, b.name)
+    semver.rcompare(a.name, b.name),
   );
   return sorted_versions[0];
 }
 
 export function getLatestMatching(
   version: string,
-  version_list: vi.VersionInfo[]
+  version_list: vi.VersionInfo[],
 ): vi.VersionInfo {
   let matching_versions = version_list
     .filter((v) => !v.draft && !v.prerelease)

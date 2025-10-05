@@ -61,7 +61,7 @@ describe('When adding tool to cache', () => {
     platform: string,
     darwin: boolean,
     linux: boolean,
-    windows: boolean
+    windows: boolean,
   ) {
     const orig_platform: string = process.platform;
     Object.defineProperty(process, 'platform', {

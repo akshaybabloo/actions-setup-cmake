@@ -156,12 +156,12 @@ describe('When api token is required', () => {
   });
   it('passing empty token gives error', async () => {
     await expect(version.getAllVersionInfo('')).rejects.toThrow(
-      'Invalid API token'
+      'Invalid API token',
     );
   });
   it('not passing token gives error', async () => {
     await expect(version.getAllVersionInfo()).rejects.toThrow(
-      'Invalid API token'
+      'Invalid API token',
     );
   });
 });
@@ -217,7 +217,7 @@ describe('When using macos 3.19.2 release', () => {
     const selected = version.getLatestMatching('3.x', version_info);
     const assets = selected.assets;
     const macos = assets.filter(
-      (a) => a.platform === 'darwin' && a.filetype === 'archive'
+      (a) => a.platform === 'darwin' && a.filetype === 'archive',
     );
     expect(macos.length).toBe(1);
     const macosAsset = macos[0];
@@ -353,7 +353,7 @@ describe('When using the 3.20 release', () => {
     const version_info = await version.getAllVersionInfo();
     const selected = version.getLatestMatching('3.x', version_info);
     const assets = selected.assets.filter(
-      (a) => a.platform === 'linux' && a.filetype === 'archive'
+      (a) => a.platform === 'linux' && a.filetype === 'archive',
     );
     expect(assets.length).toBe(1);
     expect(assets[0]).toEqual({
@@ -369,7 +369,7 @@ describe('When using the 3.20 release', () => {
     const version_info = await version.getAllVersionInfo();
     const selected = version.getLatestMatching('3.x', version_info);
     const assets = selected.assets.filter(
-      (a) => a.platform === 'win32' && a.filetype === 'archive'
+      (a) => a.platform === 'win32' && a.filetype === 'archive',
     );
     expect(assets.length).toBe(1);
     expect(assets[0]).toEqual({
@@ -422,7 +422,7 @@ describe('When using the 3.19 windows release with both 32 and 64 bit archives',
     const selected = version.getLatestMatching('3.x', version_info);
     const assets = selected.assets.filter(
       (a) =>
-        a.platform === 'win32' && a.filetype === 'archive' && a.arch === 'x86'
+        a.platform === 'win32' && a.filetype === 'archive' && a.arch === 'x86',
     );
     expect(assets.length).toBe(1);
     expect(assets[0]).toEqual({
@@ -441,7 +441,7 @@ describe('When using the 3.19 windows release with both 32 and 64 bit archives',
       (a) =>
         a.platform === 'win32' &&
         a.filetype === 'archive' &&
-        a.arch === 'x86_64'
+        a.arch === 'x86_64',
     );
     expect(assets.length).toBe(1);
     expect(assets[0]).toEqual({

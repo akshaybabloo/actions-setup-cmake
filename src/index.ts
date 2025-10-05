@@ -11,7 +11,7 @@ async function run() {
     const all_version_info = await version.getAllVersionInfo(api_token);
     const chosen_version_info = version.getLatestMatching(
       required_version,
-      all_version_info
+      all_version_info,
     );
     core.info(`Using cmake version ${chosen_version_info.name}`);
 
