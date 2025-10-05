@@ -53,24 +53,25 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v5
 
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v1
+    - uses: actions/setup-node@v5
+      with:
+        node-version: 22
 
-    - name: Cache Bun dependencies
+    - name: Cache NPM dependencies
       uses: actions/cache@v4
       with:
-        path: ~/.bun/install/cache
-        key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-bun-
+          ${{ runner.os }}-node-
 
     - name: Install dependencies
-      run: bun install
+      run: npm install
 
     - name: Run checks and tests
       run: |
-        bun run format
+        npm run format
         git diff --quiet src/ __tests__/
-        bun run package
+        npm run package
         git diff --quiet dist/
-        bun run test
+        npm run test
