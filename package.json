@@ -27,7 +27,7 @@
     "typed-rest-client": "^1.8.11"
   },
   "devDependencies": {
-    "@actions/github": "^5.1.1",
+    "@actions/github": "^6.0.1",
     "@actions/io": "^1.1.3",
     "@types/jest": "^27.5.2",
     "@types/node": "^22.18.8",
