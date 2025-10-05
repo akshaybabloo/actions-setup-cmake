@@ -15,8 +15,7 @@ async function run() {
     );
     core.info(`Using cmake version ${chosen_version_info.name}`);
 
-    const use_32bits = core.getInput('use-32bit').toLowerCase() === 'true';
-    const arch_candidates = use_32bits ? ['x86'] : ['x86_64', 'x86'];
+    const arch_candidates = ['x86_64', 'x86'];
 
     await setup.addCMakeToPath(chosen_version_info, arch_candidates);
   } catch (error) {
