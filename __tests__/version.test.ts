@@ -288,17 +288,17 @@ describe('When providing multiple different archs', () => {
     });
   });
 
-  it('correctly parses the aarch86 archive', async () => {
+  it('correctly parses the arm64 archive', async () => {
     const version_info = await version.getAllVersionInfo();
     const selected = version.getLatestMatching('3.x', version_info);
     const assets = selected.assets;
-    const macos = assets.filter((a) => a.arch != 'x86_64');
-    expect(macos.length).toBe(1);
-    const macosAsset = macos[0];
-    expect(macosAsset).toEqual({
+    const arm = assets.filter((a) => a.arch === 'arm64');
+    expect(arm.length).toBe(1);
+    const armAsset = arm[0];
+    expect(armAsset).toEqual({
       name: 'cmake-3.19.3-Linux-aarch64.tar.gz',
       platform: 'linux',
-      arch: '',
+      arch: 'arm64',
       filetype: 'archive',
       url: 'https://fakeaddress.com/cmake-3.19.3-Linux-aarch64.tar.gz',
     });

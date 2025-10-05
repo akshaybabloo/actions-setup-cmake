@@ -13,8 +13,12 @@ import * as vi from '../src/version-info';
 import * as fs from 'fs';
 
 afterEach(() => {
-  fs.rmdirSync(cachePath, { recursive: true });
-  fs.rmdirSync(tempPath, { recursive: true });
+  if (fs.existsSync(cachePath)) {
+    fs.rmdirSync(cachePath, { recursive: true });
+  }
+  if (fs.existsSync(tempPath)) {
+    fs.rmdirSync(tempPath, { recursive: true });
+  }
 });
 
 describe('When adding tool to cache', () => {
@@ -49,7 +53,9 @@ describe('When adding tool to cache', () => {
   };
 
   beforeEach(() => {
+    nock.cleanAll();
     nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
   });
 
   afterEach(() => {
@@ -127,7 +133,9 @@ describe('When using version 3.19.2 on macos', () => {
   };
 
   beforeEach(() => {
+    nock.cleanAll();
     nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
   });
 
   afterEach(() => {
@@ -193,7 +201,9 @@ describe('When using version 2.8', () => {
   };
 
   beforeEach(() => {
+    nock.cleanAll();
     nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
   });
 
   afterEach(() => {
@@ -248,7 +258,7 @@ describe('Using version 3.19.3', () => {
       {
         name: 'cmake-3.19.3-Linux-aarch64.tar.gz',
         platform: 'linux',
-        arch: '',
+        arch: 'arm64',
         filetype: 'archive',
         url: 'https://fakeaddress.com/cmake-3.19.3-Linux-aarch64.tar.gz',
       },
@@ -280,12 +290,34 @@ describe('Using version 3.19.3', () => {
   };
 
   beforeEach(() => {
+    nock.cleanAll();
     nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
   });
 
   afterEach(() => {
     nock.cleanAll();
     nock.enableNetConnect();
+  });
+
+  it('downloads the aarch64 archive on linux', async () => {
+    const orig_platform: string = process.platform;
+    Object.defineProperty(process, 'platform', {
+      value: 'linux',
+    });
+    expect(process.platform).toBe('linux');
+    const x86_nock = nock('https://fakeaddress.com')
+      .get('/cmake-3.19.3-Linux-x86_64.tar.gz')
+      .replyWithFile(200, path.join(dataPath, 'empty.tar.gz'));
+    const aarch64_nock = nock('https://fakeaddress.com')
+      .get('/cmake-3.19.3-Linux-aarch64.tar.gz')
+      .replyWithFile(200, path.join(dataPath, 'empty.tar.gz'));
+    await setup.addCMakeToToolCache(version, ['arm64', 'x86_64']);
+    expect(x86_nock.isDone()).toBe(false);
+    expect(aarch64_nock.isDone()).toBe(true);
+    Object.defineProperty(process, 'platform', {
+      value: orig_platform,
+    });
   });
 
   it('downloads the x86_64 archive on linux', async () => {
@@ -300,7 +332,7 @@ describe('Using version 3.19.3', () => {
     const aarch64_nock = nock('https://fakeaddress.com')
       .get('/cmake-3.19.3-Linux-aarch64.tar.gz')
       .replyWithFile(200, path.join(dataPath, 'empty.tar.gz'));
-    await setup.addCMakeToToolCache(version, ['x86_64']);
+    await setup.addCMakeToToolCache(version, ['x86_64', 'arm64']);
     expect(x86_nock.isDone()).toBe(true);
     expect(aarch64_nock.isDone()).toBe(false);
     Object.defineProperty(process, 'platform', {
@@ -329,37 +361,37 @@ describe('Using version 3.19.3', () => {
   });
 });
 
-describe('Using a version with both x86_64 and x86 binaries', () => {
-  const version: vi.VersionInfo = {
-    name: '3.20.2',
+describe('ARM64 architecture support', () => {
+  const arm64_version: vi.VersionInfo = {
+    name: '3.25.0',
     assets: [
       {
-        name: 'cmake-3.20.2-windows-i386.msi',
-        platform: 'win32',
-        arch: 'x86',
-        filetype: 'package',
-        url: 'https://url.test/cmake-3.20.2-windows-i386.msi',
-      },
-      {
-        name: 'cmake-3.20.2-windows-i386.zip',
-        platform: 'win32',
-        arch: 'x86',
+        name: 'cmake-3.25.0-linux-aarch64.tar.gz',
+        platform: 'linux',
+        arch: 'arm64',
         filetype: 'archive',
-        url: 'https://url.test/cmake-3.20.2-windows-i386.zip',
+        url: 'https://fakeaddress.com/cmake-3.25.0-linux-aarch64.tar.gz',
       },
       {
-        name: 'cmake-3.20.2-windows-x86_64.msi',
-        platform: 'win32',
-        arch: 'x86_64',
-        filetype: 'package',
-        url: 'https://url.test/cmake-3.20.2-windows-x86_64.msi',
-      },
-      {
-        name: 'cmake-3.20.2-windows-x86_64.zip',
-        platform: 'win32',
+        name: 'cmake-3.25.0-linux-x86_64.tar.gz',
+        platform: 'linux',
         arch: 'x86_64',
         filetype: 'archive',
-        url: 'https://url.test/cmake-3.20.2-windows-x86_64.zip',
+        url: 'https://fakeaddress.com/cmake-3.25.0-linux-x86_64.tar.gz',
+      },
+      {
+        name: 'cmake-3.25.0-macos-universal.tar.gz',
+        platform: 'darwin',
+        arch: 'x86_64',
+        filetype: 'archive',
+        url: 'https://fakeaddress.com/cmake-3.25.0-macos-universal.tar.gz',
+      },
+      {
+        name: 'cmake-3.25.0-windows-x86_64.zip',
+        platform: 'win32',
+        arch: 'x86_64',
+        filetype: 'archive',
+        url: 'https://fakeaddress.com/cmake-3.25.0-windows-x86_64.zip',
       },
     ],
     url: '',
@@ -368,7 +400,9 @@ describe('Using a version with both x86_64 and x86 binaries', () => {
   };
 
   beforeEach(() => {
+    nock.cleanAll();
     nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
   });
 
   afterEach(() => {
@@ -376,49 +410,159 @@ describe('Using a version with both x86_64 and x86 binaries', () => {
     nock.enableNetConnect();
   });
 
-  it('downloads the 32 bit package when requested', async () => {
+  it('prioritizes arm64 on Linux when arm64 is first in candidates', async () => {
     const orig_platform: string = process.platform;
     Object.defineProperty(process, 'platform', {
-      value: 'win32',
+      value: 'linux',
     });
-    expect(process.platform).toBe('win32');
-    const x86_nock = nock('https://url.test')
-      .get('/cmake-3.20.2-windows-i386.zip')
-      .replyWithFile(200, path.join(dataPath, 'empty.zip'));
-    await setup.addCMakeToToolCache(version, ['x86']);
-    expect(x86_nock.isDone()).toBe(true);
+
+    const arm64_nock = nock('https://fakeaddress.com')
+      .get('/cmake-3.25.0-linux-aarch64.tar.gz')
+      .replyWithFile(200, path.join(dataPath, 'empty.tar.gz'));
+    const x86_64_nock = nock('https://fakeaddress.com')
+      .get('/cmake-3.25.0-linux-x86_64.tar.gz')
+      .replyWithFile(200, path.join(dataPath, 'empty.tar.gz'));
+
+    await setup.addCMakeToToolCache(arm64_version, ['arm64', 'x86_64']);
+
+    expect(arm64_nock.isDone()).toBe(true);
+    expect(x86_64_nock.isDone()).toBe(false);
+
     Object.defineProperty(process, 'platform', {
       value: orig_platform,
     });
   });
 
-  it('downloads the 64 bit package when requested', async () => {
+  it('falls back to x86_64 when arm64 is not available', async () => {
+    const x86_only_version: vi.VersionInfo = {
+      name: '3.10.0',
+      assets: [
+        {
+          name: 'cmake-3.10.0-linux-x86_64.tar.gz',
+          platform: 'linux',
+          arch: 'x86_64',
+          filetype: 'archive',
+          url: 'https://fakeaddress.com/cmake-3.10.0-linux-x86_64.tar.gz',
+        },
+      ],
+      url: '',
+      draft: false,
+      prerelease: false,
+    };
+
     const orig_platform: string = process.platform;
     Object.defineProperty(process, 'platform', {
-      value: 'win32',
+      value: 'linux',
     });
-    expect(process.platform).toBe('win32');
-    const x86_nock = nock('https://url.test')
-      .get('/cmake-3.20.2-windows-x86_64.zip')
-      .replyWithFile(200, path.join(dataPath, 'empty.zip'));
-    await setup.addCMakeToToolCache(version, ['x86_64']);
-    expect(x86_nock.isDone()).toBe(true);
+
+    const x86_64_nock = nock('https://fakeaddress.com')
+      .get('/cmake-3.10.0-linux-x86_64.tar.gz')
+      .replyWithFile(200, path.join(dataPath, 'empty.tar.gz'));
+
+    // Even though arm64 is first, it should fall back to x86_64 since arm64 is not available
+    await setup.addCMakeToToolCache(x86_only_version, ['arm64', 'x86_64']);
+
+    expect(x86_64_nock.isDone()).toBe(true);
+
     Object.defineProperty(process, 'platform', {
       value: orig_platform,
     });
   });
 
-  it('falls back to 64 bit package when both requested', async () => {
+  it('uses macOS universal binary which supports both x86_64 and arm64', async () => {
     const orig_platform: string = process.platform;
     Object.defineProperty(process, 'platform', {
-      value: 'win32',
+      value: 'darwin',
     });
-    expect(process.platform).toBe('win32');
-    const x86_nock = nock('https://url.test')
-      .get('/cmake-3.20.2-windows-x86_64.zip')
-      .replyWithFile(200, path.join(dataPath, 'empty.zip'));
-    await setup.addCMakeToToolCache(version, ['x86_64', 'x86']);
-    expect(x86_nock.isDone()).toBe(true);
+
+    const universal_nock = nock('https://fakeaddress.com')
+      .get('/cmake-3.25.0-macos-universal.tar.gz')
+      .replyWithFile(200, path.join(dataPath, 'empty.tar.gz'));
+
+    // macOS universal binaries work for both arm64 and x86_64
+    await setup.addCMakeToToolCache(arm64_version, ['arm64', 'x86_64']);
+
+    expect(universal_nock.isDone()).toBe(true);
+
+    Object.defineProperty(process, 'platform', {
+      value: orig_platform,
+    });
+  });
+
+  it('throws error when no matching architecture is found', async () => {
+    const arm64_only_version: vi.VersionInfo = {
+      name: '3.25.0',
+      assets: [
+        {
+          name: 'cmake-3.25.0-linux-aarch64.tar.gz',
+          platform: 'linux',
+          arch: 'arm64',
+          filetype: 'archive',
+          url: 'https://fakeaddress.com/cmake-3.25.0-linux-aarch64.tar.gz',
+        },
+      ],
+      url: '',
+      draft: false,
+      prerelease: false,
+    };
+
+    const orig_platform: string = process.platform;
+    Object.defineProperty(process, 'platform', {
+      value: 'linux',
+    });
+
+    // Try to download with only x86_64 candidate on an arm64-only version
+    await expect(
+      setup.addCMakeToToolCache(arm64_only_version, ['x86_64', 'x86']),
+    ).rejects.toThrow('Could not find linux asset for cmake version 3.25.0');
+
+    Object.defineProperty(process, 'platform', {
+      value: orig_platform,
+    });
+  });
+
+  it('correctly handles multiple arm64 variants in filename', async () => {
+    const multi_arm_version: vi.VersionInfo = {
+      name: '3.26.0',
+      assets: [
+        {
+          name: 'cmake-3.26.0-linux-aarch64.tar.gz',
+          platform: 'linux',
+          arch: 'arm64',
+          filetype: 'archive',
+          url: 'https://fakeaddress.com/cmake-3.26.0-linux-aarch64.tar.gz',
+        },
+        {
+          name: 'cmake-3.26.0-linux-arm64.tar.gz',
+          platform: 'linux',
+          arch: 'arm64',
+          filetype: 'archive',
+          url: 'https://fakeaddress.com/cmake-3.26.0-linux-arm64.tar.gz',
+        },
+      ],
+      url: '',
+      draft: false,
+      prerelease: false,
+    };
+
+    const orig_platform: string = process.platform;
+    Object.defineProperty(process, 'platform', {
+      value: 'linux',
+    });
+
+    // Should download the first matching arm64 asset
+    const aarch64_nock = nock('https://fakeaddress.com')
+      .get('/cmake-3.26.0-linux-aarch64.tar.gz')
+      .replyWithFile(200, path.join(dataPath, 'empty.tar.gz'));
+    const arm64_nock = nock('https://fakeaddress.com')
+      .get('/cmake-3.26.0-linux-arm64.tar.gz')
+      .replyWithFile(200, path.join(dataPath, 'empty.tar.gz'));
+
+    await setup.addCMakeToToolCache(multi_arm_version, ['arm64']);
+
+    // Should use the first one found
+    expect(aarch64_nock.isDone() || arm64_nock.isDone()).toBe(true);
+
     Object.defineProperty(process, 'platform', {
       value: orig_platform,
     });

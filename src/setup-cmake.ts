@@ -13,9 +13,10 @@ function getURL(
   const assets_for_platform: vi.AssetInfo[] = version.assets
     .filter((a) => a.platform === process.platform && a.filetype === 'archive')
     .sort();
-  // The arch_candidates provides an ordered set of architectures to try, and
-  // the first matching asset is used. This will typically be 'x86_64' first,
-  // with 'x86' checked if nothing was found.
+  // The arch_candidates provides an ordered set of architectures to try based on the
+  // system architecture. The first matching asset is used. For example, on arm64 systems
+  // it tries 'arm64' first, then 'x86_64', then 'x86'. On x64 systems it tries 'x86_64'
+  // first, then 'x86', then 'arm64'.
   let matching_assets = undefined;
   for (let arch of arch_candidates) {
     const arch_assets = assets_for_platform.filter((a) => a.arch === arch);
@@ -25,9 +26,9 @@ function getURL(
     }
   }
   if (matching_assets == undefined) {
-    // If there are no x86_64 or x86 packages then give up.
+    // If there are no matching packages for any of the candidate architectures, give up.
     throw new Error(
-      `Could not find ${process.platform} asset for cmake version ${version.name}`,
+      `Could not find ${process.platform} asset for cmake version ${version.name} with architectures: ${arch_candidates.join(', ')}`,
     );
   }
   core.debug(

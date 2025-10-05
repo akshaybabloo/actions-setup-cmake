@@ -50,26 +50,27 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-    - name: Setup node
-      uses: actions/setup-node@v5
-      with:
-        node-version: '22.x'
-
     - name: Checkout
       uses: actions/checkout@v5
 
-    - name: Install node dependencies
-      run: npm install
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
 
-    - name: Check `npm run format` has been run
+    - name: Cache Bun dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.bun/install/cache
+        key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+        restore-keys: |
+          ${{ runner.os }}-bun-
+
+    - name: Install dependencies
+      run: bun install
+
+    - name: Run checks and tests
       run: |
-        npm run format
+        bun run format
         git diff --quiet src/ __tests__/
-
-    - name: Check `npm run package` has been run
-      run: |
-        npm run package
+        bun run package
         git diff --quiet dist/
-
-    - name: Run tests
-      run: npm test
+        bun run test

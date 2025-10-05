@@ -10,7 +10,7 @@
   "scripts": {
     "package": "ncc build src/index.ts -m -o dist",
     "format": "prettier --write **/*.ts",
-    "prepare": "npm run format && npm run package",
+    "prepare": "bun run format && bun run package",
     "test": "jest"
   },
   "keywords": [
@@ -52,7 +52,7 @@
   "husky": {
     "skipCI": true,
     "hooks": {
-      "pre-commit": "npm run prepare && git add dist/"
+      "pre-commit": "bun run prepare && git add dist/"
     }
   },
   "prettier": {
