@@ -21,7 +21,7 @@
   "author": "John Lawson",
   "license": "BSD-3-Clause-Clear",
   "dependencies": {
-    "@actions/core": "^1.11.1",
+    "@actions/core": "^3.0.0",
     "@actions/tool-cache": "^2.0.2",
     "semver": "^7.7.4",
     "typed-rest-client": "^1.8.11"
