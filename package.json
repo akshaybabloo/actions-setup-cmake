@@ -9,7 +9,7 @@
     "url": "https://github.com/jwlawson/actions-setup-cmake"
   },
   "scripts": {
-    "package": "esbuild src/index.ts --bundle --platform=node --target=node20 --format=esm --minify --outfile=dist/index.js",
+    "package": "esbuild src/index.ts --bundle --platform=node --target=node20 --format=esm --minify --outfile=dist/index.js --banner:js=\"import{createRequire as __cr}from'module';const require=__cr(import.meta.url);\"",
     "format": "prettier --write **/*.ts",
     "prepare": "pnpm run format && pnpm run package",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
