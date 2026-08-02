@@ -16,7 +16,7 @@ importers:
         version: 4.0.0
       semver:
         specifier: ^7.7.4
-        version: 7.7.4
+        version: 7.8.5
       typed-rest-client:
         specifier: ^2.3.0
         version: 2.3.0
@@ -32,7 +32,7 @@ importers:
         version: 24.12.2
       '@types/semver':
         specifier: ^7.7.1
-        version: 7.7.1
+        version: 7.8.0
       esbuild:
         specifier: ^0.28.0
         version: 0.28.0
@@ -423,8 +423,8 @@ packages:
   '@types/node@24.12.2':
     resolution: {integrity: sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g==}
 
-  '@types/semver@7.7.1':
-    resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
+  '@types/semver@7.8.0':
+    resolution: {integrity: sha512-1mAINjtQCXXeLkJ9ehXkwOcBpqtLxiVtKhpUf83DdRNdQKV0iXZpaHYqRr7nj+wvxuJzoAmAwXI+sCNMv1CzLQ==}
 
   '@vitest/expect@4.1.5':
     resolution: {integrity: sha512-PWBaRY5JoKuRnHlUHfpV/KohFylaDZTupcXN1H9vYryNLOnitSw60Mw9IAE2r67NbwwzBw/Cc/8q9BK3kIX8Kw==}
@@ -710,8 +710,8 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
-  semver@7.7.4:
-    resolution: {integrity: sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==}
+  semver@7.8.5:
+    resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -919,7 +919,7 @@ snapshots:
       '@actions/exec': 3.0.0
       '@actions/http-client': 4.0.1
       '@actions/io': 3.0.2
-      semver: 7.7.4
+      semver: 7.8.5
 
   '@emnapi/core@1.9.2':
     dependencies:
@@ -1167,7 +1167,7 @@ snapshots:
     dependencies:
       undici-types: 7.16.0
 
-  '@types/semver@7.7.1': {}
+  '@types/semver@7.8.0': {}
 
   '@vitest/expect@4.1.5':
     dependencies:
@@ -1447,7 +1447,7 @@ snapshots:
       '@rolldown/binding-win32-arm64-msvc': 1.0.0-rc.16
       '@rolldown/binding-win32-x64-msvc': 1.0.0-rc.16
 
-  semver@7.7.4: {}
+  semver@7.8.5: {}
 
   side-channel-list@1.0.1:
     dependencies:
