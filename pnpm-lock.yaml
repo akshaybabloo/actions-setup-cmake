@@ -19,7 +19,7 @@ importers:
         version: 7.7.4
       typed-rest-client:
         specifier: ^2.3.0
-        version: 2.3.0
+        version: 2.3.1
     devDependencies:
       '@actions/github':
         specifier: ^9.1.1
@@ -769,8 +769,8 @@ packages:
     resolution: {integrity: sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg==}
     engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
 
-  typed-rest-client@2.3.0:
-    resolution: {integrity: sha512-FfBj5tjviexjIus3La4n4s9i+f81Zj7HU+lUlQWK219HMRfmzLsbIf4PZF2+X6EouJKyuANpvvef5VrUWM4AFw==}
+  typed-rest-client@2.3.1:
+    resolution: {integrity: sha512-k4kX5Up6qA68D0Cby2AK+6+vM5k3qTxe+/3FqhnHRExjY5cfbOnzjQZbP/LXleF8hVoDvDqxlgk9KK83HoBZlQ==}
     engines: {node: '>= 16.0.0'}
 
   typescript@6.0.3:
@@ -1503,7 +1503,7 @@ snapshots:
 
   tunnel@0.0.6: {}
 
-  typed-rest-client@2.3.0:
+  typed-rest-client@2.3.1:
     dependencies:
       des.js: 1.1.0
       js-md4: 0.3.2
