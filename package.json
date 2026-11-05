@@ -25,7 +25,7 @@
     "@actions/core": "^3.0.1",
     "@actions/tool-cache": "^4.0.0",
     "semver": "^7.7.4",
-    "typed-rest-client": "^2.3.0"
+    "typed-rest-client": "^3.0.0"
   },
   "devDependencies": {
     "@actions/github": "^9.1.1",
